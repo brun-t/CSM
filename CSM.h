@@ -102,8 +102,10 @@ inline Ptr_stack *create_stack(size_t capacity);
  * @fn Dyn_ptr *stack_new_ptr(Ptr_stack *stack)
  * @brief It creates a Dyn_ptr and it allocate it on Ptr_stack
  * @param stack the Ptr_stack
+ * @param dataSize the size of the data that is gonna be inserted into the ptr
+ * @param data is the data that is gonna be inserted into ptr
  */
-inline Dyn_ptr *stack_new_ptr(Ptr_stack *stack);
+inline Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize);
 
 /**
  * @fn void dyn_ptr_alloc(Dyn_ptr * dyn_ptr, void * data)
@@ -202,7 +204,7 @@ Ptr_stack *create_stack(size_t capacity) {
   return ptr_stack;
 }
 
-Dyn_ptr *stack_new_ptr(Ptr_stack *stack) {
+Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize) {
   if (stack->length >= stack->capacity) {
     if (!arena_realloc(stack->arena, stack->arena->capacity * 2)) {
       return NULL;
@@ -220,7 +222,11 @@ Dyn_ptr *stack_new_ptr(Ptr_stack *stack) {
   stack->ptr_list[stack->length] = *dyn_ptr;
   stack->length++;
 
-  return &stack->ptr_list[stack->length - 1]; // Return the dyn_ptr
+  dyn_ptr = &stack->ptr_list[stack->length - 1];
+  dyn_ptr_alloc(stack, dyn_ptr, data, dataSize);
+  if (dyn_ptr->ptr == NULL)
+    return NULL;
+  return dyn_ptr;
 }
 
 void dyn_ptr_alloc(Ptr_stack *stack, Dyn_ptr *dyn_ptr, void *data,
