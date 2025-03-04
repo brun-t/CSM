@@ -1,0 +1,33 @@
+DOXYFILE_ENCODING      = UTF-8
+
+PROJECT_NAME           = "CSM. C99. Safe. Memory"
+
+INPUT                  = CSM.h README.md
+
+PROJECT_NUMBER         = 1.0.0
+
+OUTPUT_DIRECTORY       = "."
+HTML_OUTPUT            = docs
+
+ALLOW_UNICODE_NAMES    = NO
+
+OUTPUT_LANGUAGE        = English
+
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_XML           = NO
+GENERATE_RTF           = NO
+GENERATE_MAN           = NO
+GENERATE_CHM           = NO
+GENERATE_QHP           = NO
+GENERATE_ECLIPSEHELP   = NO
+GENERATE_DOCBOOK       = NO
+GENERATE_AUTOGEN_DEF   = NO
+GENERATE_PERLMOD       = NO
+
+USE_MDFILE_AS_MAINPAGE   = README.md
+
+GENERATE_TREEVIEW      = YES # optional. Also works without treeview
+DISABLE_INDEX = NO
+FULL_SIDEBAR = NO
+HTML_COLORSTYLE        = DARK
