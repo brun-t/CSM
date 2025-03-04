@@ -11,39 +11,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+/**\defgroup arena Arena Allocator struct and functions */
+/**\defgroup ptr_stack Ptr_stack struct and functions*/
+/**\defgroup dyn_ptr Dyn_ptr struct and functions */
 
 /**
+ * @ingroup arena
  * @struct Arena
- * @brief Arena allocator struct
+ * @brief It's a struct that defines a Arena allocator
  * @param capacity the capacity of the arena
  * @param actual_size the size of the content allocated into arena
  * @param block the raw memory block of the arena
  */
 typedef struct {
-  size_t capacity;
-  size_t actual_size;
-  uint8_t *block;
+  size_t capacity; /**< is the maximum amount of "blocks" that Arena can hold*/
+  size_t actual_size; /**< is the quantity of blocks into Arena in this moment */
+  uint8_t *block; /**< is the raw memory block into Arena */
 } Arena;
 
 /**
+ * @ingroup arena
  * @struct Arena_ptr
- * @brief Arena ptr struct
+ * @brief Is a pointer into Arena allocator that includes it own size and a the block of memory
  * @param size the size of the ptr
  * @param block the raw memory block of the ptr
  */
 typedef struct {
-  size_t size;
-  uint8_t *block;
+  size_t size; /**< is the length of the block */
+  uint8_t *block; /**< is the memory itself */
 } Arena_ptr;
 /**
+ * @ingroup arena
  * @fn Arena *create_arena(size_t capacity)
- * @brief Arena constructor
+ * @brief It creates a arena allocator
  * @param capacity is a size_t that defines the initial capacity of the arena
  * @return a arena struct allocated in heap and already defined
  */
 inline Arena *create_arena(size_t capacity);
 
 /**
+ * @ingroup arena
  * @fn Arena *arena_alloc(Arena *arena, size_t size)
  * @brief It gets a block from arena allocator
  * @param size is a size_t that defines the size of the requested block
@@ -52,15 +59,17 @@ inline Arena *create_arena(size_t capacity);
 inline Arena_ptr arena_alloc(Arena *arena, size_t size);
 
 /**
+ * @ingroup arena
  * @fn Arena *arena_free(Arena *arena)
- * @brief Arena destructor
+ * @brief It free all memory withing the arena
  * @param arena is the arena that it want to be free
  */
 inline void arena_free(Arena *arena);
 
-/**
+/** 
+ * @ingroup arena
  * @fn bool arena_realloc(Arena *arena, size_t extra_capacity)
- * @brief It aument the capacity of the Arena allocator
+ * @brief It increment the capacity of the Arena allocator
  * @param arena is the arena allocator
  * @param extra_capacity is the extra capacity you want to add to the arena
  * allocator
@@ -68,38 +77,34 @@ inline void arena_free(Arena *arena);
 inline bool arena_realloc(Arena *arena, size_t extra_capacity);
 
 /**
- * @struct Dyn_ptr
- * @brief A Dynamic pointer, similar to unique_ptr
- * @param ptr is a void * pointer that contains the raw memory block from the
- * arena allocator
- *
- */
-typedef struct {
-  void *ptr;
-} Dyn_ptr;
-
-/**
- * @struct Ptr_struct
+ * @ingroup ptr_stack
+ * @brief it's a dynamic list that manage all Dyn_ptr's
+ * @struct Ptr_stack
+ * 
  * @param arena is the arena allocator that Ptr_stack uses
  * @param ptr_list is a dynamic array of Dyn_ptr's
- * @param length is the actual lenght of the Ptr_stack
+ * @param length is the actual length of the Ptr_stack
  */
 typedef struct {
-  Arena *arena;
-  Dyn_ptr *ptr_list;
-  size_t length;
-  size_t capacity;
+  Arena *arena; /**< arena is the arena allocator used for Ptr_stack */
+  Dyn_ptr *ptr_list; /**< ptr_list is the dynamic list that holds all Dyn_ptr's from Ptr_stack */
+  size_t length; /**< is the number of Dyn_ptr's that is into Ptr_stack */
+  size_t capacity; /**< is the quantity of how many Dyn_ptr's Ptr_stack can hold */
 } Ptr_stack;
 
 /**
+ * @ingroup ptr_stack
  * @fn Ptr_stack *create_stack(size_t capacity)
- * @brief The Ptr_stack constructor
+ * @brief It creates a new Ptr_stack instance that is ready for use
  * @param capacity is the initial capacity of the stack
  * */
 inline Ptr_stack *create_stack(size_t capacity);
 
 /**
- * @fn Dyn_ptr *stack_new_ptr(Ptr_stack *stack)
+ * @addtogroup ptr_stack
+ * @addtogroup dyn_ptr
+  
+ * @fn Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize)
  * @brief It creates a Dyn_ptr and it allocate it on Ptr_stack
  * @param stack the Ptr_stack
  * @param dataSize the size of the data that is gonna be inserted into the ptr
@@ -108,28 +113,47 @@ inline Ptr_stack *create_stack(size_t capacity);
 inline Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize);
 
 /**
- * @fn void dyn_ptr_alloc(Dyn_ptr * dyn_ptr, void * data)
+ * @ingroup ptr_stack
+  
+ * @fn void stack_free(Ptr_stack *stack)
+ * @brief It free the Ptr_stack
+ * @param stack is the Ptr_stack that is gonna be freed
+ */
+inline void stack_free(Ptr_stack *stack);
+
+/**
+ * @ingroup dyn_ptr
+ * @struct Dyn_ptr
+ * @brief A Dynamic pointer, it free memory automatically
+ * @param ptr is a void * pointer that contains the raw memory block from the arena allocator
+ */
+typedef struct {
+  void *ptr; /**< is the raw memory that Dyn_ptr holds*/
+} Dyn_ptr;
+
+/**
+ * @ingroup dyn_ptr
+ 
+ * @fn void dyn_ptr_alloc(Ptr_stack *stack, Dyn_ptr *dyn_ptr, void *data, size_t size)
  * @brief It put memory into Dyn_ptr
  * @param dyn_ptr is the dyn_ptr where data is gonna be inserted
+ * @param stack is the stack where the pointer is into
+ * @param data is the data that is gonna be inserted
+ * @param size is the length of the data that is gonna be inserted
  */
 
 inline void dyn_ptr_alloc(Ptr_stack *stack, Dyn_ptr *dyn_ptr, void *data,
                           size_t size);
 
 /**
+ * @ingroup dyn_ptr
+ 
  * @def get_dyn_ptr_data(T, dyn_ptr)
  * @brief it transform Dyn_ptr data to a specific type and it returns it
  * @param T is the type to what Dyn_ptr data is gonna transform
  * @param dyn_ptr is the Dyn_ptr where data is gonna be accessed
  */
 #define get_dyn_ptr_data(T, dyn_ptr)
-
-/**
- * @fn void stack_free(Ptr_stack *stack)
- * @brief It free the Ptr_stack
- * @param stack is the Ptr_stack that is gonna be freed
- */
-inline void stack_free(Ptr_stack *stack);
 
 #ifdef CSM_IMPLEMENTATION
 Arena *create_arena(size_t capacity) {
