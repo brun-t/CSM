@@ -9,8 +9,8 @@ var group__arena =
       [ "block", "struct_arena__ptr.html#a4e4ada67fc1fb7996813725fb24de304", null ],
       [ "size", "struct_arena__ptr.html#a6b591d3b41f5e3d9b6ef3d655d08ae77", null ]
     ] ],
-    [ "arena_alloc", "group__arena.html#gad482810985724bf9e0d6e93d9e6ba885", null ],
-    [ "arena_free", "group__arena.html#ga616d58f6836253558d42eee74ae910bc", null ],
-    [ "arena_realloc", "group__arena.html#ga5c170beefd78a99424a219182cf43f1b", null ],
-    [ "create_arena", "group__arena.html#gaa96bb9218dcc89d8645c293f8481a54a", null ]
+    [ "arena_alloc", "group__arena.html#gae5ab3e72dc4f4300fb527f946d17d234", null ],
+    [ "arena_free", "group__arena.html#ga80a4f5dc58ff4d0354f1e3328304865d", null ],
+    [ "arena_realloc", "group__arena.html#gaa722931b9e552658bf49daaebebbd2d1", null ],
+    [ "create_arena", "group__arena.html#ga2efc0d5cae9b3ab7b9258c0918aa0842", null ]
 ];

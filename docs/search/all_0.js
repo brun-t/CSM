@@ -7,8 +7,8 @@ var searchData=
   ['arena_4',['Arena',['../struct_arena.html',1,'']]],
   ['arena_5',['arena',['../struct_ptr__stack.html#affcdca423104924f5a178afabb002bf6',1,'Ptr_stack']]],
   ['arena_20allocator_20struct_20and_20functions_6',['Arena Allocator struct and functions',['../group__arena.html',1,'']]],
-  ['arena_5falloc_7',['arena_alloc',['../group__arena.html#gad482810985724bf9e0d6e93d9e6ba885',1,'CSM.h']]],
-  ['arena_5ffree_8',['arena_free',['../group__arena.html#ga616d58f6836253558d42eee74ae910bc',1,'CSM.h']]],
+  ['arena_5falloc_7',['arena_alloc',['../group__arena.html#gae5ab3e72dc4f4300fb527f946d17d234',1,'CSM.h']]],
+  ['arena_5ffree_8',['arena_free',['../group__arena.html#ga80a4f5dc58ff4d0354f1e3328304865d',1,'CSM.h']]],
   ['arena_5fptr_9',['Arena_ptr',['../struct_arena__ptr.html',1,'']]],
-  ['arena_5frealloc_10',['arena_realloc',['../group__arena.html#ga5c170beefd78a99424a219182cf43f1b',1,'CSM.h']]]
+  ['arena_5frealloc_10',['arena_realloc',['../group__arena.html#gaa722931b9e552658bf49daaebebbd2d1',1,'CSM.h']]]
 ];

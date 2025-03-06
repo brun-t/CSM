@@ -15,6 +15,10 @@
 /**\defgroup ptr_stack Ptr_stack struct and functions*/
 /**\defgroup dyn_ptr Dyn_ptr struct and functions */
 
+#ifndef CSM_API
+#define CSM_API static inline
+#endif
+
 /**
  * @ingroup arena
  * @struct Arena
@@ -47,7 +51,7 @@ typedef struct {
  * @param capacity is a size_t that defines the initial capacity of the arena
  * @return a arena struct allocated in heap and already defined
  */
-inline Arena *create_arena(size_t capacity);
+CSM_API Arena *create_arena(size_t capacity);
 
 /**
  * @ingroup arena
@@ -56,7 +60,7 @@ inline Arena *create_arena(size_t capacity);
  * @param size is a size_t that defines the size of the requested block
  * @param arena is the arena allocator
  */
-inline Arena_ptr arena_alloc(Arena *arena, size_t size);
+CSM_API Arena_ptr arena_alloc(Arena *arena, size_t size);
 
 /**
  * @ingroup arena
@@ -64,7 +68,7 @@ inline Arena_ptr arena_alloc(Arena *arena, size_t size);
  * @brief It free all memory withing the arena
  * @param arena is the arena that it want to be free
  */
-inline void arena_free(Arena *arena);
+CSM_API void arena_free(Arena *arena);
 
 /** 
  * @ingroup arena
@@ -74,7 +78,21 @@ inline void arena_free(Arena *arena);
  * @param extra_capacity is the extra capacity you want to add to the arena
  * allocator
  */
-inline bool arena_realloc(Arena *arena, size_t extra_capacity);
+CSM_API bool arena_realloc(Arena *arena, size_t extra_capacity);
+
+/**
+ * @ingroup dyn_ptr
+ * @struct Dyn_ptr
+ * @brief A Dynamic pointer, it free memory automatically
+ * @param ptr is a void * pointer that contains the raw memory block from the arena allocator
+ * @param size is the size of the memory into Dyn_ptr
+ */
+
+typedef struct Dyn_ptr {
+  void *ptr; /**< is the raw memory that Dyn_ptr holds*/
+  size_t size; /**< is the size of Dyn_ptr::ptr */
+  void (*dealloc)(struct Dyn_ptr *); /**< is a function ptr that have the deallocator for the data, NOTE:this is just optional */
+} Dyn_ptr;
 
 /**
  * @ingroup ptr_stack
@@ -93,12 +111,50 @@ typedef struct {
 } Ptr_stack;
 
 /**
+ * @ingroup dyn_ptr
+ *
+ * @fn void dyn_ptr_alloc(Ptr_stack *stack, Dyn_ptr *dyn_ptr, void *data, size_t size)
+ * @brief It put memory into Dyn_ptr
+ * @param dyn_ptr is the dyn_ptr where data is gonna be inserted
+ * @param stack is the stack where the pointer is into
+ * @param data is the data that is gonna be inserted
+ * @param size is the length of the data that is gonna be inserted
+ */
+
+CSM_API void dyn_ptr_alloc(Ptr_stack *stack, Dyn_ptr *dyn_ptr, void *data, size_t size);
+
+/**
+ * @ingroup dyn_ptr
+ * @brief It insert the new deallocator
+ * @param dyn_ptr is the dyn_ptr where the new deallocator is gonna be inserted
+ * @param dealloc is the deallocator that is gonna be inserted
+ */
+
+CSM_API void dyn_ptr_insert_deallocator(Dyn_ptr *dyn_ptr, void (*dealloc)(Dyn_ptr *));
+
+/**
+ * @ingroup dyn_ptr
+ * @brief Is just the placeholder for the deallocator for dyn_ptr
+ */
+CSM_API void null_deallocator(Dyn_ptr *_);
+
+/**
+ * @ingroup dyn_ptr
+ 
+ * @def get_dyn_ptr_data(T, dyn_ptr)
+ * @brief it transform Dyn_ptr data to a specific type and it returns it
+ * @param T is the type to what Dyn_ptr data is gonna transform
+ * @param dyn_ptr is the Dyn_ptr where data is gonna be accessed
+ */
+#define get_dyn_ptr_data(T, dyn_ptr)
+
+/**
  * @ingroup ptr_stack
  * @fn Ptr_stack *create_stack(size_t capacity)
  * @brief It creates a new Ptr_stack instance that is ready for use
  * @param capacity is the initial capacity of the stack
  * */
-inline Ptr_stack *create_stack(size_t capacity);
+CSM_API Ptr_stack *create_stack(size_t capacity);
 
 /**
  * @addtogroup ptr_stack
@@ -110,7 +166,7 @@ inline Ptr_stack *create_stack(size_t capacity);
  * @param dataSize the size of the data that is gonna be inserted into the ptr
  * @param data is the data that is gonna be inserted into ptr
  */
-inline Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize);
+CSM_API Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize);
 
 /**
  * @ingroup ptr_stack
@@ -119,41 +175,7 @@ inline Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize);
  * @brief It free the Ptr_stack
  * @param stack is the Ptr_stack that is gonna be freed
  */
-inline void stack_free(Ptr_stack *stack);
-
-/**
- * @ingroup dyn_ptr
- * @struct Dyn_ptr
- * @brief A Dynamic pointer, it free memory automatically
- * @param ptr is a void * pointer that contains the raw memory block from the arena allocator
- */
-typedef struct {
-  void *ptr; /**< is the raw memory that Dyn_ptr holds*/
-} Dyn_ptr;
-
-/**
- * @ingroup dyn_ptr
- 
- * @fn void dyn_ptr_alloc(Ptr_stack *stack, Dyn_ptr *dyn_ptr, void *data, size_t size)
- * @brief It put memory into Dyn_ptr
- * @param dyn_ptr is the dyn_ptr where data is gonna be inserted
- * @param stack is the stack where the pointer is into
- * @param data is the data that is gonna be inserted
- * @param size is the length of the data that is gonna be inserted
- */
-
-inline void dyn_ptr_alloc(Ptr_stack *stack, Dyn_ptr *dyn_ptr, void *data,
-                          size_t size);
-
-/**
- * @ingroup dyn_ptr
- 
- * @def get_dyn_ptr_data(T, dyn_ptr)
- * @brief it transform Dyn_ptr data to a specific type and it returns it
- * @param T is the type to what Dyn_ptr data is gonna transform
- * @param dyn_ptr is the Dyn_ptr where data is gonna be accessed
- */
-#define get_dyn_ptr_data(T, dyn_ptr)
+CSM_API void stack_free(Ptr_stack *stack);
 
 #ifdef CSM_IMPLEMENTATION
 Arena *create_arena(size_t capacity) {
@@ -188,11 +210,6 @@ Arena_ptr arena_alloc(Arena *arena, size_t size) {
   return (Arena_ptr){.size = size, .block = block};
 }
 
-inline void arena_free(Arena *arena) {
-  free(arena->block);
-  free(arena);
-}
-
 bool arena_realloc(Arena *arena, size_t extra_capacity) {
   void *ptr = realloc(arena->block, arena->actual_size + extra_capacity);
   if (ptr == NULL)
@@ -200,6 +217,11 @@ bool arena_realloc(Arena *arena, size_t extra_capacity) {
   arena->block = (uint8_t *)ptr;
   arena->capacity += extra_capacity;
   return true;
+}
+
+void arena_free(Arena *arena) {
+  free(arena->block);
+  free(arena);
 }
 
 Ptr_stack *create_stack(size_t capacity) {
@@ -229,10 +251,12 @@ Ptr_stack *create_stack(size_t capacity) {
 }
 
 Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize) {
-  if (stack->length >= stack->capacity) {
-    if (!arena_realloc(stack->arena, stack->arena->capacity * 2)) {
-      return NULL;
-    }
+  size_t growth = dataSize * 0.9;
+  if (growth < 1024) { // minimum of 1KB growth.
+    growth = 1024;
+  }
+  if (stack->length >= stack->capacity && !arena_realloc(stack->arena, growth)) {
+    return NULL;
   }
 
   Arena_ptr arena_ptr = arena_alloc(stack->arena, sizeof(Dyn_ptr));
@@ -247,6 +271,8 @@ Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize) {
   stack->length++;
 
   dyn_ptr = &stack->ptr_list[stack->length - 1];
+  dyn_ptr->size = dataSize;
+  dyn_ptr->dealloc = null_deallocator;
   dyn_ptr_alloc(stack, dyn_ptr, data, dataSize);
   if (dyn_ptr->ptr == NULL)
     return NULL;
@@ -268,7 +294,14 @@ void dyn_ptr_alloc(Ptr_stack *stack, Dyn_ptr *dyn_ptr, void *data,
   memcpy(data_arena_ptr.block, data, size);
 
   dyn_ptr->ptr = data_arena_ptr.block;
+  dyn_ptr->size = size; /// ? It should be size or data_arena_ptr.size
 }
+
+void dyn_ptr_insert_deallocator(Dyn_ptr *dyn_ptr, void (*dealloc)(Dyn_ptr *)) {
+  dyn_ptr->dealloc = dealloc;
+}
+
+void null_deallocator(Dyn_ptr *_){};
 
 #undef get_dyn_ptr_data
 
@@ -278,9 +311,13 @@ void dyn_ptr_alloc(Ptr_stack *stack, Dyn_ptr *dyn_ptr, void *data,
  * @param T is the type to what Dyn_ptr data is gonna transform
  * @param dyn_ptr is the Dyn_ptr where data is gonna be accessed
  */
-#define get_dyn_ptr_data(T, dyn_ptr) (T *)dyn_ptr->ptr
+#define get_dyn_ptr_data(T, dyn_ptr) (T *)(dyn_ptr->ptr)
 
 void stack_free(Ptr_stack *stack) {
+  for (size_t i = 0; i < stack->length; i++) {
+    stack->ptr_list[i].dealloc(&stack->ptr_list[i]);
+  }
+
   free(stack->ptr_list);
   arena_free(stack->arena);
   free(stack);

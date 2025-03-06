@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['length_0',['length',['../struct_ptr__stack.html#acf836f7e66921da5e21ddec48ead1f7d',1,'Ptr_stack']]]
+  ['dealloc_0',['dealloc',['../struct_dyn__ptr.html#af5aea1f0a0d2c51260db0bf518ce952d',1,'Dyn_ptr']]]
 ];

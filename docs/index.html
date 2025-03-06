@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en-US">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
@@ -122,26 +122,26 @@ A tiny example</h2>
 <div class="line"><span class="preprocessor">#include &lt;string.h&gt;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">void</span>) {</div>
-<div class="line">  <a class="code hl_struct" href="struct_ptr__stack.html">Ptr_stack</a> *st = <a class="code hl_function" href="group__ptr__stack.html#ga9d4506aeb78d3e11e4ae931dfdbbb377">create_stack</a>(1024 * 1024); <span class="comment">// create the stack where ptr are gonna be</span></div>
+<div class="line">  <a class="code hl_struct" href="struct_ptr__stack.html">Ptr_stack</a> *st = <a class="code hl_function" href="group__ptr__stack.html#ga526b9a50e4a93070bcf77963dc1bad83">create_stack</a>(1024 * 1024); <span class="comment">// create the stack where ptr are gonna be</span></div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordtype">char</span> *str = <span class="stringliteral">&quot;Hello&quot;</span>;</div>
-<div class="line">  <a class="code hl_struct" href="struct_dyn__ptr.html">Dyn_ptr</a> *string_ptr = <a class="code hl_function" href="_c_s_m_8h.html#afff7bd333b97473a5457c8fd4dd77f1c">stack_new_ptr</a>(st, str, strlen(str) + 1); <span class="comment">// insert string into a ptr</span></div>
+<div class="line">  <a class="code hl_struct" href="struct_dyn__ptr.html">Dyn_ptr</a> *string_ptr = <a class="code hl_function" href="_c_s_m_8h.html#a35fb46ca372150c4f9f169fcadbb2665">stack_new_ptr</a>(st, str, strlen(str) + 1); <span class="comment">// insert string into a ptr</span></div>
 <div class="line"> </div>
 <div class="line">  printf(<span class="stringliteral">&quot;pointer:%p, string:%s\n&quot;</span>, string_ptr-&gt;<a class="code hl_variable" href="struct_dyn__ptr.html#a4a6b16645211c5efaffdea3736214aa8">ptr</a>,</div>
 <div class="line">         <a class="code hl_define" href="group__dyn__ptr.html#gaea6132cddbf11d10d4af05098fbacb9d">get_dyn_ptr_data</a>(<span class="keywordtype">char</span>, string_ptr)); <span class="comment">// show the raw pointer address and the data into it</span></div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_function" href="group__ptr__stack.html#gacaaa315fbe4f30091d00003a3c386826">stack_free</a>(st); <span class="comment">// free the ptr stack</span></div>
+<div class="line">  <a class="code hl_function" href="group__ptr__stack.html#ga0277f8a7c4314e2309d8436916f3d9b1">stack_free</a>(st); <span class="comment">// free the ptr stack</span></div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
 <div class="ttc" id="a_c_s_m_8h_html"><div class="ttname"><a href="_c_s_m_8h.html">CSM.h</a></div><div class="ttdoc">A STB style file for better memory manipulation in C99 but that continue giving fine grained control ...</div></div>
-<div class="ttc" id="a_c_s_m_8h_html_afff7bd333b97473a5457c8fd4dd77f1c"><div class="ttname"><a href="_c_s_m_8h.html#afff7bd333b97473a5457c8fd4dd77f1c">stack_new_ptr</a></div><div class="ttdeci">Dyn_ptr * stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize)</div><div class="ttdoc">It creates a Dyn_ptr and it allocate it on Ptr_stack.</div></div>
-<div class="ttc" id="agroup__dyn__ptr_html_gaea6132cddbf11d10d4af05098fbacb9d"><div class="ttname"><a href="group__dyn__ptr.html#gaea6132cddbf11d10d4af05098fbacb9d">get_dyn_ptr_data</a></div><div class="ttdeci">#define get_dyn_ptr_data(T, dyn_ptr)</div><div class="ttdoc">it transform Dyn_ptr data to a specific type and it returns it</div><div class="ttdef"><b>Definition</b> CSM.h:156</div></div>
-<div class="ttc" id="agroup__ptr__stack_html_ga9d4506aeb78d3e11e4ae931dfdbbb377"><div class="ttname"><a href="group__ptr__stack.html#ga9d4506aeb78d3e11e4ae931dfdbbb377">create_stack</a></div><div class="ttdeci">Ptr_stack * create_stack(size_t capacity)</div><div class="ttdoc">It creates a new Ptr_stack instance that is ready for use.</div></div>
-<div class="ttc" id="agroup__ptr__stack_html_gacaaa315fbe4f30091d00003a3c386826"><div class="ttname"><a href="group__ptr__stack.html#gacaaa315fbe4f30091d00003a3c386826">stack_free</a></div><div class="ttdeci">void stack_free(Ptr_stack *stack)</div><div class="ttdoc">It free the Ptr_stack.</div></div>
-<div class="ttc" id="astruct_dyn__ptr_html"><div class="ttname"><a href="struct_dyn__ptr.html">Dyn_ptr</a></div><div class="ttdoc">A Dynamic pointer, it free memory automatically.</div><div class="ttdef"><b>Definition</b> CSM.h:130</div></div>
-<div class="ttc" id="astruct_dyn__ptr_html_a4a6b16645211c5efaffdea3736214aa8"><div class="ttname"><a href="struct_dyn__ptr.html#a4a6b16645211c5efaffdea3736214aa8">Dyn_ptr::ptr</a></div><div class="ttdeci">void * ptr</div><div class="ttdef"><b>Definition</b> CSM.h:131</div></div>
-<div class="ttc" id="astruct_ptr__stack_html"><div class="ttname"><a href="struct_ptr__stack.html">Ptr_stack</a></div><div class="ttdoc">it&#39;s a dynamic list that manage all Dyn_ptr&#39;s</div><div class="ttdef"><b>Definition</b> CSM.h:88</div></div>
+<div class="ttc" id="a_c_s_m_8h_html_a35fb46ca372150c4f9f169fcadbb2665"><div class="ttname"><a href="_c_s_m_8h.html#a35fb46ca372150c4f9f169fcadbb2665">stack_new_ptr</a></div><div class="ttdeci">CSM_API Dyn_ptr * stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize)</div><div class="ttdoc">It creates a Dyn_ptr and it allocate it on Ptr_stack.</div></div>
+<div class="ttc" id="agroup__dyn__ptr_html_gaea6132cddbf11d10d4af05098fbacb9d"><div class="ttname"><a href="group__dyn__ptr.html#gaea6132cddbf11d10d4af05098fbacb9d">get_dyn_ptr_data</a></div><div class="ttdeci">#define get_dyn_ptr_data(T, dyn_ptr)</div><div class="ttdoc">it transform Dyn_ptr data to a specific type and it returns it</div><div class="ttdef"><b>Definition</b> CSM.h:149</div></div>
+<div class="ttc" id="agroup__ptr__stack_html_ga0277f8a7c4314e2309d8436916f3d9b1"><div class="ttname"><a href="group__ptr__stack.html#ga0277f8a7c4314e2309d8436916f3d9b1">stack_free</a></div><div class="ttdeci">CSM_API void stack_free(Ptr_stack *stack)</div><div class="ttdoc">It free the Ptr_stack.</div></div>
+<div class="ttc" id="agroup__ptr__stack_html_ga526b9a50e4a93070bcf77963dc1bad83"><div class="ttname"><a href="group__ptr__stack.html#ga526b9a50e4a93070bcf77963dc1bad83">create_stack</a></div><div class="ttdeci">CSM_API Ptr_stack * create_stack(size_t capacity)</div><div class="ttdoc">It creates a new Ptr_stack instance that is ready for use.</div></div>
+<div class="ttc" id="astruct_dyn__ptr_html"><div class="ttname"><a href="struct_dyn__ptr.html">Dyn_ptr</a></div><div class="ttdoc">A Dynamic pointer, it free memory automatically.</div><div class="ttdef"><b>Definition</b> CSM.h:91</div></div>
+<div class="ttc" id="astruct_dyn__ptr_html_a4a6b16645211c5efaffdea3736214aa8"><div class="ttname"><a href="struct_dyn__ptr.html#a4a6b16645211c5efaffdea3736214aa8">Dyn_ptr::ptr</a></div><div class="ttdeci">void * ptr</div><div class="ttdef"><b>Definition</b> CSM.h:92</div></div>
+<div class="ttc" id="astruct_ptr__stack_html"><div class="ttname"><a href="struct_ptr__stack.html">Ptr_stack</a></div><div class="ttdoc">it&#39;s a dynamic list that manage all Dyn_ptr&#39;s</div><div class="ttdef"><b>Definition</b> CSM.h:106</div></div>
 </div><!-- fragment --> </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
