@@ -8,6 +8,7 @@ CSM use STB style so you just copy the header "CSM.h" and put it and done.
 
 - it comes with a arena allocator included for faster and robust memory
 - it comes with automatic allocating and it just free all used memory after execution
+- it allow user to add custom dealloctors(Think it like c++ destructors) in Dyn_ptrs
 
 ## In work features
 

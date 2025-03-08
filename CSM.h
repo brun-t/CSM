@@ -251,7 +251,7 @@ Ptr_stack *create_stack(size_t capacity) {
 }
 
 Dyn_ptr *stack_new_ptr(Ptr_stack *stack, void *data, size_t dataSize) {
-  size_t growth = dataSize * 0.9;
+  size_t growth = dataSize * (size_t)2;
   if (growth < 1024) { // minimum of 1KB growth.
     growth = 1024;
   }
