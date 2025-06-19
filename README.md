@@ -8,7 +8,8 @@ CSM use STB style so you just copy the header "CSM.h" and put it and done.
 
 - it comes with a arena allocator included for faster and robust memory
 - it comes with automatic allocating and it just free all used memory after execution
-- it allow user to add custom dealloctors(Think it like c++ destructors) in Dyn_ptrs
+- it allow user to add custom deallocators(Think it like c++ destructors) in Dyn_ptr's
+- it allows a special mode called CSM_AUTO that create a micro runtime for CSM example below
 
 ## In work features
 
@@ -35,5 +36,25 @@ int main(void) {
   stack_free(st); // free the ptr stack
 
   return 0;
+}
+```
+
+## CSM_AUTO example
+
+```c
+#define CSM_AUTO // This init the CSM_AUTO mode!
+#define CSM_IMPLEMENTATION
+#include "CSM.h"
+#include <stdio.h>
+#include <string.h>
+
+int main(Ctx *ctx) { // Wow what is this Context thing?
+  char *str = "Hello";
+  Dyn_ptr *string_ptr = stack_new_ptr(ctx->st, str, strlen(str) + 1); // The context has the ptr_stack, argv, and argc!
+
+  printf("pointer:%p, string:%s\n", string_ptr->ptr,
+         get_dyn_ptr_data(char, string_ptr)); // Normal use of the lib
+
+  return 0; // automatic freed of the Ptr_stack!
 }
 ```

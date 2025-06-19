@@ -15,8 +15,16 @@
 /**\defgroup ptr_stack Ptr_stack struct and functions*/
 /**\defgroup dyn_ptr Dyn_ptr struct and functions */
 
+#if defined(_MSC_VER)
+#define AInline __forceinline
+#elif defined(__GNUC__) || defined(__clang__)
+#define AInline __attribute__((always_inline)) inline
+#else
+#define AInline inline
+#endif
+
 #ifndef CSM_API
-#define CSM_API static inline
+#define CSM_API static AInline
 #endif
 
 /**
@@ -87,7 +95,6 @@ CSM_API bool arena_realloc(Arena *arena, size_t extra_capacity);
  * @param ptr is a void * pointer that contains the raw memory block from the arena allocator
  * @param size is the size of the memory into Dyn_ptr
  */
-
 typedef struct Dyn_ptr {
   void *ptr; /**< is the raw memory that Dyn_ptr holds*/
   size_t size; /**< is the size of Dyn_ptr::ptr */
@@ -301,7 +308,9 @@ void dyn_ptr_insert_deallocator(Dyn_ptr *dyn_ptr, void (*dealloc)(Dyn_ptr *)) {
   dyn_ptr->dealloc = dealloc;
 }
 
-void null_deallocator(Dyn_ptr *_){};
+void null_deallocator(Dyn_ptr *_) {
+  (void)_;
+};
 
 #undef get_dyn_ptr_data
 
@@ -323,4 +332,54 @@ void stack_free(Ptr_stack *stack) {
   free(stack);
 }
 #endif
+
+#ifdef CSM_AUTO
+#ifndef CSM_AUTO_SIZE
+#define CSM_AUTO_SIZE (1024 * 1024)
+#endif
+
+typedef struct {
+  int argc;
+  char **argv;
+  Ptr_stack *st;
+  Dyn_ptr *(*alloc)(void *data, size_t size);
+  void (*insert_dealloc)(Dyn_ptr *dyn_ptr, void (*dealloc)(Dyn_ptr *));
+
+} Ctx;
+
+int CMain(Ctx *ctx);
+
+static Ctx *__csm_internal_context;
+
+Dyn_ptr *__csm_internal_ctx_alloc(void *data, size_t size) {
+  return stack_new_ptr(__csm_internal_context->st, data, size);
+}
+
+void __csm_internal_ctx_insert_dealloc(Dyn_ptr *dyn_ptr, void (*dealloc)(Dyn_ptr *)) {
+  dyn_ptr_insert_deallocator(dyn_ptr, dealloc);
+}
+
+#define main(...)                                            \
+  main(int argc, char **argv) {                              \
+    static Ptr_stack *__csm_internal_stack = NULL;           \
+    __csm_internal_stack = create_stack(CSM_AUTO_SIZE);      \
+    if (!__csm_internal_stack) {                             \
+      fprintf(stderr, "Failed to create Ptr_stack\n");       \
+      return 1;                                              \
+    }                                                        \
+    Ctx ctx = {                                              \
+        .argc = argc,                                        \
+        .argv = argv,                                        \
+        .st = __csm_internal_stack,                          \
+        .alloc = __csm_internal_ctx_alloc,                   \
+        .insert_dealloc = __csm_internal_ctx_insert_dealloc, \
+    };                                                       \
+    __csm_internal_context = &ctx;                           \
+    int result = CMain(&ctx);                                \
+    stack_free(__csm_internal_stack);                        \
+    return result;                                           \
+  }                                                          \
+  int CMain(Ctx *ctx)
+#endif // CSM_AUTO
+
 #endif
