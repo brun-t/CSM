@@ -50,7 +50,7 @@ int main(void) {
 
 int main(Ctx *ctx) { // Wow what is this Context thing?
   char *str = "Hello";
-  Dyn_ptr *string_ptr = stack_new_ptr(ctx->st, str, strlen(str) + 1); // The context has the ptr_stack, argv, and argc!
+  Dyn_ptr *string_ptr = ctx->alloc(str, strlen(str) + 1); // The context has the ptr_stack, argv, and argc!
 
   printf("pointer:%p, string:%s\n", string_ptr->ptr,
          get_dyn_ptr_data(char, string_ptr)); // Normal use of the lib
