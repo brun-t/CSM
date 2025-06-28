@@ -1,6 +1,9 @@
 var _c_s_m_8h =
 [
+    [ "AInline", "_c_s_m_8h.html#a13c77459e7e025bdaad66b96ddb3c66c", null ],
+    [ "CSM_API", "_c_s_m_8h.html#ada476264d1ab1ef726222b37ca7c9107", null ],
     [ "get_dyn_ptr_data", "group__dyn__ptr.html#gaea6132cddbf11d10d4af05098fbacb9d", null ],
+    [ "Dyn_ptr", "group__dyn__ptr.html#ga2d3646f9631409b215822f4260180653", null ],
     [ "arena_alloc", "group__arena.html#gae5ab3e72dc4f4300fb527f946d17d234", null ],
     [ "arena_free", "group__arena.html#ga80a4f5dc58ff4d0354f1e3328304865d", null ],
     [ "arena_realloc", "group__arena.html#gaa722931b9e552658bf49daaebebbd2d1", null ],

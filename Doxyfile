@@ -18,7 +18,6 @@ GENERATE_LATEX         = NO
 GENERATE_XML           = NO
 GENERATE_RTF           = NO
 GENERATE_MAN           = NO
-GENERATE_CHM           = NO
 GENERATE_QHP           = NO
 GENERATE_ECLIPSEHELP   = NO
 GENERATE_DOCBOOK       = NO

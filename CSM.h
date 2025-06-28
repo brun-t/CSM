@@ -15,6 +15,10 @@
 /**\defgroup ptr_stack Ptr_stack struct and functions*/
 /**\defgroup dyn_ptr Dyn_ptr struct and functions */
 
+/**
+ * @def AInline
+ * @brief it just a tiny macro for aggressive inlining across MSVC, Clang and GCC
+ */
 #if defined(_MSC_VER)
 #define AInline __forceinline
 #elif defined(__GNUC__) || defined(__clang__)
@@ -24,6 +28,9 @@
 #endif
 
 #ifndef CSM_API
+/**
+ * @brief It just defines a macro for the properties of the functions in the lib
+ */
 #define CSM_API static AInline
 #endif
 
@@ -90,10 +97,10 @@ CSM_API bool arena_realloc(Arena *arena, size_t extra_capacity);
 
 /**
  * @ingroup dyn_ptr
- * @struct Dyn_ptr
  * @brief A Dynamic pointer, it free memory automatically
  * @param ptr is a void * pointer that contains the raw memory block from the arena allocator
  * @param size is the size of the memory into Dyn_ptr
+ * @param dealloc this is func ptr for define a deallocator that is like a destructor this is for edge cases and is optional
  */
 typedef struct Dyn_ptr {
   void *ptr; /**< is the raw memory that Dyn_ptr holds*/
@@ -338,18 +345,25 @@ void stack_free(Ptr_stack *stack) {
 #define CSM_AUTO_SIZE (1024 * 1024)
 #endif
 
+/***
+ * @param argc is the main argc
+ * @param argv is the main argv
+ * @param st is the Ptr_stack that the micro runtime uses
+ * @param alloc is a function that allows you to alloc memory from the micro runtime
+ * @param insert_dealloc it allows you to insert a deallocator into a Dyn_ptr
+ */
 typedef struct {
-  int argc;
   char **argv;
   Ptr_stack *st;
   Dyn_ptr *(*alloc)(void *data, size_t size);
   void (*insert_dealloc)(Dyn_ptr *dyn_ptr, void (*dealloc)(Dyn_ptr *));
-
+  int argc;
 } Ctx;
 
 int CMain(Ctx *ctx);
 
 static Ctx *__csm_internal_context;
+static Ptr_stack *__csm_internal_stack;
 
 Dyn_ptr *__csm_internal_ctx_alloc(void *data, size_t size) {
   return stack_new_ptr(__csm_internal_context->st, data, size);
@@ -359,27 +373,32 @@ void __csm_internal_ctx_insert_dealloc(Dyn_ptr *dyn_ptr, void (*dealloc)(Dyn_ptr
   dyn_ptr_insert_deallocator(dyn_ptr, dealloc);
 }
 
+void __csm_internal_stack_free(void) {
+  stack_free(__csm_internal_stack);
+}
+
 #define main(...)                                            \
   main(int argc, char **argv) {                              \
-    static Ptr_stack *__csm_internal_stack = NULL;           \
-    __csm_internal_stack = create_stack(CSM_AUTO_SIZE);      \
-    if (!__csm_internal_stack) {                             \
+    static Ptr_stack *stack = NULL;                          \
+    stack = create_stack(CSM_AUTO_SIZE);                     \
+    if (!stack) {                                            \
       fprintf(stderr, "Failed to create Ptr_stack\n");       \
       return 1;                                              \
     }                                                        \
+    __csm_internal_stack = stack;                            \
     Ctx ctx = {                                              \
         .argc = argc,                                        \
         .argv = argv,                                        \
-        .st = __csm_internal_stack,                          \
+        .st = stack,                                         \
         .alloc = __csm_internal_ctx_alloc,                   \
         .insert_dealloc = __csm_internal_ctx_insert_dealloc, \
     };                                                       \
     __csm_internal_context = &ctx;                           \
-    int result = CMain(&ctx);                                \
-    stack_free(__csm_internal_stack);                        \
-    return result;                                           \
+    atexit(__csm_internal_stack_free);                       \
+    return CMain(&ctx);                                      \
   }                                                          \
   int CMain(Ctx *ctx)
+
 #endif // CSM_AUTO
 
 #endif
